@@ -10,5 +10,35 @@ body {
   background-color: #FFFFFF;
   color: #212121;
   line-height: 1.5;
+  margin-left: auto;
+  margin-right: auto;
+  width: 1200px;
 }
 
+.search-form {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.gallery {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  align-items: flex-start;
+}
+
+.photo-card {
+  flex-basis: calc((100% - 45px) / 4);
+  
+}
+.photo {
+  /* object-fit: cover; */
+  /* height: 190px; */
+}
+
+img {
+  display: block;
+  height: auto;
+  width: 100%;
+}
