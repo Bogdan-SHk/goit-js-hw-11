@@ -8,7 +8,7 @@ export default function fetchImages(name) {
     safesearch: 'true',
   });
 
-  const url = `https://pixabay.com/api?${searchParams}`;
+  const url = `https://pixabay.com/api/?${searchParams}`;
 
   return fetch(url).then(response => {
     if (!response.ok) {
