@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 export default class ImagesApiService {
   constructor() {
     this.searchImage = '';
@@ -19,16 +21,11 @@ export default class ImagesApiService {
 
     const url = `https://pixabay.com/api/?${searchParams}`;
 
-    try {
-      const response = await fetch(url);
-      const image = await response.json();
-      this.page += 1;
-      console.log(image);
-      return image;
-    } catch (error) {
-      console.error(error);
-    }
+    return await axios.get(url).then(response => response.data)
+  }
 
+  incrementPage() {
+    this.page += 1;
   }
 
   resetPage() {

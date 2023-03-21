@@ -87,16 +87,17 @@ input {
 
 .info {
   display: flex;
-  gap: 5px;
   font-size: 12px;
-  justify-content: center;
+  justify-content: space-between;
+  align-items: center;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
 .info-item {
   display: flex;
   flex-direction: column;
   text-align: center;
-  flex-basis: calc((100% - 15px) / 4);
 }
 
 .load-more {

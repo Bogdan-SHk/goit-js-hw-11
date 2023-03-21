@@ -17,10 +17,13 @@ const gallery = new SimpleLightbox('.gallery a', {
 formEl.addEventListener('submit', onImageSearch);
 loadMoreBtnEl.addEventListener('click', onLoadMore);
 
+
 async function onImageSearch(evt) {
   evt.preventDefault();
 
   galleryEl.innerHTML = '';
+
+  infiniteScroll();
 
   if (loadMoreBtnEl.classList.contains('visible')) {
     loadMoreBtnEl.classList.remove('visible');
@@ -31,47 +34,42 @@ async function onImageSearch(evt) {
 
   try {
     const images = await imagesApiService.fetchImages();
-    const image = await renderGalleryMarkup(images);
-    if (images.hits.length === 0) { 
+    if (images.hits.length === 0) {
+      Notiflix.Notify.failure(
+        'Sorry, there are no images matching your search query. Please try again.'
+      );
       return;
     }
+    const imageMarkup = await renderGalleryMarkup(images);
     Notiflix.Notify.info(`Hooray! We found ${images.totalHits} images.`);
     loadMoreBtnEl.classList.add('visible');
     gallery.refresh();
   } catch (error) {
     console.log(error.message);
-  } 
+  }
 }
 
 async function onLoadMore() {
+  imagesApiService.incrementPage();
+  imagesApiService.totalPages += 40;
   try {
     const images = await imagesApiService.fetchImages();
-    const image = await (imagesApiService.totalPages += 40);
     if (imagesApiService.totalPages > images.totalHits) {
       Notiflix.Notify.info(
         "We're sorry, but you've reached the end of search results."
       );
       loadMoreBtnEl.classList.remove('visible');
-    } else {
-      renderGalleryMarkup(images);
-      gallery.refresh();
-      smoothScroll();
     }
+    const imageMarkup = await renderGalleryMarkup(images);
+    gallery.refresh();
+    smoothScroll();
   } catch (error) {
     console.log(error.message);
   }
 }
 
+// Створення і рендер розмітки
 function renderGalleryMarkup(images) {
-  if (images.hits.length === 0) {
-    Notiflix.Notify.failure(
-      'Sorry, there are no images matching your search query. Please try again.'
-    );
-  }
-  renderGallery(images);
-}
-
-function renderGallery(images) {
   const imageArray = images.hits;
   const markup = imageArray
     .map(
@@ -117,6 +115,7 @@ function renderGallery(images) {
   galleryEl.insertAdjacentHTML('beforeend', markup);
 }
 
+// Функція для плавного прокручування сторінки
 function smoothScroll() {
   const { height: cardHeight } = document
     .querySelector('.gallery')
@@ -126,4 +125,23 @@ function smoothScroll() {
     top: cardHeight * 2,
     behavior: 'smooth',
   });
+}
+
+// Функція для нескінченного скролу
+function infiniteScroll() {
+  const observer = new IntersectionObserver(
+    entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          onLoadMore();
+        }
+      });
+    },
+    {
+      rootMargin: '300px',
+      threshold: 1.0,
+    }
+  );
+
+  observer.observe(loadMoreBtnEl);
 }
