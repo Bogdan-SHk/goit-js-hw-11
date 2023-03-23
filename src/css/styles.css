@@ -101,7 +101,7 @@ input {
 }
 
 .load-more {
-  display: none;
+  /* display: none; */
   width: 120px;
   margin-top: 20px;
   margin-left: auto;
@@ -112,11 +112,14 @@ input {
   background-color: orange;
   color: black;
   text-align: center;
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
 }
 
-.load-more:hover {
+/* .load-more:hover {
   background-color: hsl(39, 89%, 66%);
-}
+} */
 
 .visible {
   display: block;
